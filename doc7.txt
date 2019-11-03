@@ -1,0 +1,47 @@
+Public Sub ProcessRunning()
+Dim file_id As Integer
+Dim strline As String
+Dim Email() As String
+Dim SaveDoc As Boolean
+
+'Open file
+file_id = FreeFile
+Open "G:\Emails.txt" For Input As #file_id
+
+Dim irow As Integer
+irow = 0
+
+'Loop through the file
+Do Until EOF(file_id)
+
+    'read a line from a file
+    Line Input #file_id, strline
+
+    'Resize the array according to the line read from file
+    
+    
+    
+    'put the line into the array
+    Email = Split(strline, ";")
+    
+   ' MsgBox (Email(1) & Email(2) & Email(3) & Email(4) & Email(5) & Email(6) & Email(7))
+    
+    Call Module1.SendEmail(Email(1), Email(2), Email(3), Email(4), Email(5), Email(6), Email(7))
+    
+    
+ 'Call SendNotesMail(Email(0), Email(4), Email(1), Email(2), Email(3))
+   
+   
+   
+   
+   
+    
+    
+
+
+    'move to the next row
+    irow = irow + 1
+Loop
+
+Close #file_id
+End Sub
