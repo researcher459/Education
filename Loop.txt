@@ -1,0 +1,32 @@
+Sub CountFruit()
+
+    ' Get the last row with text
+    Dim LastRow As Long
+    LastRow = Sheet1.Cells(Sheet1.Rows.Count, 1).End(xlUp).Row
+
+    Dim i As Long, Total As Long
+    ' Use LastRow in loop
+    For i = 2 To LastRow
+        ' Check if cell has text "Orange"
+        If Sheet1.Cells(i, 1).Value = "Oranges" Then
+            ' Add value in column B to total
+            Total = Total + Sheet1.Cells(i, 2).Value
+        End If
+    Next i
+
+    ' Print total
+    Debug.Print "Total oranges sold was:"; Total
+
+End Sub
+
+
+For i = 1 To 1000
+
+        ' If cell is blank then exit for
+        If Cells(i, 1) = "" Then
+            MsgBox "Blank Cell found - Data error"
+            Exit For
+        End If
+
+    Next i
+
