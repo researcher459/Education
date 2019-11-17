@@ -1,0 +1,29 @@
+Sub test()
+
+    k = Cells(Rows.Count, "A").End(xlUp).Row - 1
+ 
+    MsgBox (k)
+
+End Sub
+
+
+Dim i As Integer
+
+For i = 1 To 6
+    Cells(i, 1).Value = 100
+Next i
+
+
+Sub test()
+
+Dim sh As Worksheet
+Set sh = ThisWorkbook.Sheets(1)
+Dim k As Long
+
+    k = Cells(Rows.Count, 1).End(xlUp).Row
+    MsgBox k
+
+    k = sh.Range("A1", sh.Range("A1").End(xlDown)).Rows.Count
+    MsgBox k
+
+End Sub
