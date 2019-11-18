@@ -1,0 +1,25 @@
+Sub FileCheck()
+Dim c As Variant
+
+'Email = Split(Sheet1.Cells(2, 2).Value, ",")
+
+c = VBA.Array(Split(Sheet1.Cells(2, 2).Value, ","))
+
+
+
+
+
+
+
+Dim x As Boolean
+
+x = FileExists("D:\Files.bat")
+
+
+
+
+End Sub
+
+Function FileExists(fullFileName As String) As Boolean
+    FileExists = VBA.Len(VBA.Dir(fullFileName)) > 0
+End Function
