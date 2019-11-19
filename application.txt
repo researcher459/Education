@@ -1,0 +1,116 @@
+
+
+Private Sub cmdSendEmail_Click()
+Dim k As Long
+Dim Text As String
+
+
+k = Cells(Rows.Count, "A").End(xlUp).Row
+
+For i = 3 To k
+
+If Cells(i, 2).Value = "" Then
+
+MsgBox "Empty Cells" & Cells(i, 2).Value
+
+On Error Resume Next
+
+
+End If
+
+Label3.Caption = Cells(i, 1).Value & Cells(i, 2).Value
+
+
+Label2.Width = Label2.Width + i
+
+
+Next i
+
+
+MsgBox "Completed"
+
+
+
+End Sub
+
+
+
+Sub Progress()
+Dim i As Long, lastrow As Long
+Dim pctdone As Single
+Dim ProgressPercentage As Double
+lastrow = Range("A" & Rows.Count).End(xlUp).Row
+frmSMail.Label2.Width = 0
+'frmSMail.Show
+For i = 1 To lastrow
+pctdone = i / lastrow
+ ProgressPercentage = Round(pctdone * 100, 0)
+   With frmSMail
+        .Label3.Caption = "Processing Row " & i & " of " & lastrow
+        .Label5.Caption = Cells(i, 1).Value
+        
+        .Label2.Width = pctdone * (.Frame1.Width)
+        .Label4.Caption = ProgressPercentage & "% Complete"
+        
+   End With
+    DoEvents
+  ' If i = lastrow Then Unload ProgressBar
+Next i
+End Sub
+
+Private Sub CommandButton1_Click()
+Call Progress
+
+End Sub
+
+Sub ProgressBar()
+
+Dim i As Long
+Dim TotalRows As Long
+Dim CurrentProgress As Double
+Dim ProgressPercentage As Double
+Dim BarWidth As Long
+
+
+i = 2
+TotalRows = Application.CountA(Range("A:A"))
+
+
+Call InitProgressBar
+
+
+Do While i <= TotalRows
+
+Cells(i, 10).Value = Cells(i, 10).Value * 1.1
+ 
+ CurrentProgress = i / TotalRows
+ BarWidth = Progress.Border.Width * CurrentProgress
+ ProgressPercentage = Round(CurrentProgress * 100, 0)
+ 
+ Progress.Bar.Width = BarWidth
+ Progress.Text.Caption = ProgressPercentage & "% Complete"
+ 
+ DoEvents
+
+i = i + 1
+
+Loop
+
+Unload Progress
+
+End Sub
+
+
+Sub InitProgressBar()
+
+With Progress
+
+.Bar.Width = 0
+ .Text.Caption = "0% Complete"
+ .Show vbModeless
+ 
+End With
+
+End Sub
+End Sub
+
