@@ -1,0 +1,92 @@
+Sub EmailDocHTML()
+Dim TheSubject As String, ToAddress As String, MyFile as String, EmailBody as String, readdata As String
+
+ToAddress = abc.efg@hij.com
+TheSubject = "this is my test"
+MyFile = "C:\MyHTMLfile.html"
+
+Open MyFile For Input As #1
+
+Do Until EOF(1)
+Input #1, readdata
+If Not Left(readdata, 1) = "*" Then
+EmailBody = EmailBody & " " & readdata
+End If
+Loop
+
+Close #1
+
+Call SendNotesMailHTML(ToAddress, , , TheSubject, , EmailBody, True)
+End Sub
+
+Public Sub SendNotesMailHTML(Recipient, Optional ccRecipient, Optional bccRecipient, _
+Optional Subject As String, Optional ByVal Attachment, _
+Optional BodyText As String, Optional SaveIt As Boolean)
+
+Dim Maildb As Object, MailDoc As Object, Session As Object, Body As Object
+Dim BodyChild As Object, Header As Object, Stream As Object
+Dim UserName As String, MailDbName As String
+Dim a(1 To 1), FileName As String, i As Long
+
+On Error GoTo ErrHdl
+
+Set Session = CreateObject("Notes.NotesSession")
+Session.ConvertMime = False
+UserName = Session.UserName
+Set Maildb = Session.GetDatabase("", "mail\username.nsf")
+If Not Maildb.IsOpen Then Maildb.OPENMAIL
+Set MailDoc = Maildb.CreateDocument
+MailDoc.Form = "Memo"
+MailDoc.sendto = Recipient
+If Not IsMissing(ccRecipient) Then MailDoc.copyto = ccRecipient
+If Not IsMissing(bccRecipient) Then MailDoc.BlindCopyTo = bccRecipient
+MailDoc.Subject = Subject
+
+Set Body = MailDoc.CreateMIMEEntity
+Set BodyChild = Body.CreateChildEntity
+Set Stream = Session.CreateStream
+Stream.WriteText BodyText
+BodyChild.SetContentFromText Stream, "text/html;charset=iso-8859-1", ENC_IDENTITY_8BIT
+Stream.Close
+Stream.Truncate
+If Not IsArray(Attachment) Then
+If Not IsMissing(Attachment) Then a(1) = Attachment: Attachment = a
+End If
+If IsArray(Attachment) Then
+For i = LBound(Attachment) To UBound(Attachment)
+FileName = Dir(Attachment(i))
+If Len(FileName) Then
+Set BodyChild = Body.CreateChildEntity
+Set Header = BodyChild.CreateHeader("Content-Type")
+Header.SetHeaderVal "multipart/mixed"
+Set Header = BodyChild.CreateHeader("Content-Disposition")
+Header.SetHeaderVal "attachment; filename=" & Chr(34) & FileName & Chr(34)
+Set Header = BodyChild.CreateHeader("Content-ID")
+Header.SetHeaderVal FileName
+Set Stream = Session.CreateStream
+If Stream.Open(Attachment(i), "binary") Then
+AttachmentType = Split(Attachment(i), ".")
+AttachmentType = "application/" & AttachmentType(UBound(AttachmentType))
+BodyChild.SetContentFromBytes Stream, AttachmentType, ENC_IDENTITY_BINARY
+End If
+End If
+Next i
+End If
+
+MailDoc.SaveMessageOnSend = SaveIt
+MailDoc.PostedDate = Now()
+MailDoc.Send 0, Recipient
+
+ErrHdl:
+If Err.Number Then MsgBox "VBA error: " & Err.Description, vbCritical, "Lotus Notes Email"
+On Error Resume Next
+Session.ConvertMime = True
+Set Body = Nothing
+Set BodyChild = Nothing
+Set Maildb = Nothing
+Set MailDoc = Nothing
+Set Header = Nothing
+Set Session = Nothing
+Set Stream = Nothing
+
+End Sub 
