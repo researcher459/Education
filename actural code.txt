@@ -1,0 +1,844 @@
+Private Sub CommandButton1_Click()
+
+
+Dim k As Long
+Dim Name As Variant
+k = Cells(Rows.Count, "B").End(xlUp).Row
+
+
+For f = 2 To k
+'Call CreateFolder("C:\Print\Clearing\Inward\", Cells(f, 2).Value)
+
+'Call FinalUnzip("C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\", "C:\Print\Clearing\" & Cells(f, 2).Value & ".zip")
+
+'Call Unzip2
+
+'Call makeZipFile("C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\" & Cells(f, 2).Value & ".zip")
+
+'Call UnZip("C:\Print\Clearing\Inward\" & Cells(f, 2).Value, "C:\Print\Clearing\" & Cells(f, 2).Value & ".zip")
+
+'Call UnzipAFile("C:\Print\Clearing\" & Cells(f, 2).Value & ".zip", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\")
+'Call CreateFolder("C:\Print\Clearing\Inward\", Cells(f, 2).Value)
+
+
+'Call ExtractZipFiles("C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\", "C:Print\Clearing\" & Cells(f, 2) & ".rar")
+lblVCode.Caption = Cells(f, 2).Value
+lblViewName.Caption = Cells(f, 3).Value
+DoEvents
+
+Call Extracted("C:\Print\Clearing\" & Cells(f, 2).Value & ".zip", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\")
+
+
+
+'Call Recursive("C:\Print\Clearing\", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value)
+
+' Call UnzipFile("C:\Print\Clearing\" & Cells(f, 2).Value & ".zip", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value)
+ 
+    
+'Call Unzip2
+Next f
+
+ 
+End Sub
+Sub ss()
+Dim filename As String, nextrow As Long, MyFolder As String
+Dim MyFile As String, text As String, PerLine As String, filedate As String
+Dim filenum As Integer
+Dim Branch As String
+
+
+MyFolder = "G:\Data\"
+MyFile = Dir(MyFolder & "*.txt")
+
+
+
+nextrow = ActiveSheet.Cells(3, "A").End(xlUp).Row + 2
+
+Do While MyFile <> ""
+
+    Open (MyFolder & MyFile) For Input As #1
+
+    'nextrow = ActiveSheet.Cells(Rows.Count, "A").End(xlUp).Row + 1
+
+    Do Until EOF(1)
+        Line Input #1, textline 'read a line
+
+        Branch = Mid(PerLine, 4, 4) ' if has date, set it but not move to the next ROW
+           If idx = "1003" Then
+        ActiveSheet.Cells(nextrow, "A").Value = Mid(textline, 15, 5)
+    
+      '      ActiveSheet.Cells(nextrow, "A").Value = Mid(textline, idx + 16)
+       ' End If
+
+        'idx = InStr(textline, "CARD NUMBER")
+       ' If idx > 0 Then
+            
+
+            nextrow = nextrow + 1 'now move to next row
+
+        End If
+
+    Loop
+    Close #1
+    MyFile = Dir()
+End Sub
+
+
+Private Sub CommandButton2_Click()
+Dim sFolder As String
+ Dim wkReport As Workbook
+    
+    Dim sPath As String
+    Dim rngFolder As Range
+    Dim rngName As Range
+    Dim filename As String, nextrow As Long, MyFolder As String
+Dim MyFile As String, text As String, PerLine As String, filedate As String
+Dim filenum As Integer
+Dim Branch As String
+
+
+
+   
+
+     
+   
+     sFolder = "G:\"
+    CreateFolder1 folder
+
+    sPath = sFolder & "Template5" & ".xlsx"
+
+    Set wkReport = Workbooks.Open(sPath)
+    
+    
+    wkReport.Sheets("Sheet1").Range("A3").Value = "S_no"
+    wkReport.Sheets("Sheet1").Range("B3").Value = "Instrument No"
+    wkReport.Sheets("Sheet1").Range("C3").Value = "Amount"
+    wkReport.Sheets("Sheet1").Range("D3").Value = "FileNo"
+    wkReport.Sheets("Sheet1").Columns("A:E").ColumnWidth = 15
+    wkReport.Sheets("Sheet1").Range("A3:E3").HorizontalAlignment = xlCenter 'Text Alignment
+    wkReport.Sheets("Sheet1").Range("A3:D3").Font.Size = 12 'Font Size
+    wkReport.Sheets("Sheet1").Range("A3:D3").Font.FontStyle = "Bold" 'Font Style
+    wkReport.Sheets("Sheet1").Range("A3:D3").Interior.ColorIndex = 29 'Cell Background color
+    wkReport.Sheets("Sheet1").Range("A3:D3").Font.Color = vbWhite 'Text color
+    
+    nextrow = wkReport.Sheets("Sheet1").Cells(3, "B").End(xlUp).Row + 2
+    MyFolder = "G:\Data\"
+MyFile = Dir(MyFolder & "*.txt")
+  
+    
+    Do While MyFile <> ""
+
+    Open (MyFolder & MyFile) For Input As #1
+
+    'nextrow = ActiveSheet.Cells(Rows.Count, "A").End(xlUp).Row + 1
+
+    Do Until EOF(1)
+        Line Input #1, PerLine 'read a line
+
+        Branch = Mid(PerLine, 4, 4) ' if has date, set it but not move to the next ROW
+           If idx = "1003" Then
+        wkReport.Sheets("Sheet1").Range(nextrow & "B").Value = Mid(PerLine, 15, 5)
+    
+      '      ActiveSheet.Cells(nextrow, "A").Value = Mid(textline, idx + 16)
+       ' End If
+
+        'idx = InStr(textline, "CARD NUMBER")
+       ' If idx > 0 Then
+            
+
+            nextrow = nextrow + 1 'now move to next row
+
+        End If
+        
+      
+   
+        'ThisWorkbook.Worksheets("REPORT").Copy after:=.Worksheets(.Worksheets.Count)
+       
+          Loop
+          Close #1
+        MyFile = Dir()
+Loop
+
+ '.Worksheets(1).Delete
+      wkReport.SaveAs "G:\Data\" & "1004" & ".xlsx"
+       wkReport.Close
+
+
+
+
+
+End Sub
+Sub CreateWorkbook(folder As String)
+Dim wkReport As Workbook
+    Dim sFolder As String
+    Dim sPath As String
+    Dim rngFolder As Range
+    Dim rngName As Range
+
+   Application.ScreenUpdating = False
+   Application.Visible = False
+   Application.DisplayAlerts = False
+   Application.EnableEvents = False
+   
+   
+    CreateFolder1 folder
+
+    sPath = sFolder & ".xlsx"
+
+    Set wkReport = Workbooks.Add(sPath)
+    
+    With wkReport
+    .Sheets("Sheet1").Range("A3").Value = "S_no"
+    .Sheets("Sheet1").Range("B3").Value = "Instrument No"
+    .Sheets("Sheet1").Range("C3").Value = "Amount"
+    .Sheets("Sheet1").Range("D3").Value = "FileNo"
+    .Sheets("Sheet1").Columns("A:E").ColumnWidth = 15
+     .Sheets("Sheet1").Range("A3:E3").HorizontalAlignment = xlCenter 'Text Alignment
+.Sheets("Sheet1").Range("A3:D3").Font.Size = 12 'Font Size
+.Sheets("Sheet1").Range("A3:D3").Font.FontStyle = "Bold" 'Font Style
+.Sheets("Sheet1").Range("A3:D3").Interior.ColorIndex = 29 'Cell Background color
+.Sheets("Sheet1").Range("A3:D3").Font.Color = vbWhite 'Text color
+    
+    
+    
+        'ThisWorkbook.Worksheets("REPORT").Copy after:=.Worksheets(.Worksheets.Count)
+        '.Worksheets(1).Delete
+        .SaveAs sPath
+        .Close
+        
+    End With
+    wkReport = Nothing
+     Application.ScreenUpdating = True
+   Application.Visible = True
+   Application.DisplayAlerts = True
+   Application.EnableEvents = True
+    
+End Sub
+
+' Purpose   : Will Recursively Build A Directory Tree
+Sub CreateFolder1(folder)
+On Error Resume Next
+Dim objFSO As Object: Set objFSO = CreateObject("Scripting.FileSystemObject")
+    If folder <> "" Then
+        If Not objFSO.FileExists(objFSO.GetParentFolderName(folder)) Then
+            Call CreateFolder1(objFSO.GetParentFolderName(folder))
+        End If
+        objFSO.CreateFolder (folder)
+    End If
+End Sub
+
+
+Private Sub CommandButton3_Click()
+Dim k As Long
+Dim Name As Variant
+k = Cells(Rows.Count, "B").End(xlUp).Row
+
+
+For f = 2 To k
+'Call CreateFolder("C:\Print\Clearing\Inward\", Cells(f, 2).Value)
+
+'Call FinalUnzip("C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\", "C:\Print\Clearing\" & Cells(f, 2).Value & ".zip")
+
+'Call Unzip2
+
+'Call makeZipFile("C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\" & Cells(f, 2).Value & ".zip")
+
+'Call UnZip("C:\Print\Clearing\Inward\" & Cells(f, 2).Value, "C:\Print\Clearing\" & Cells(f, 2).Value & ".zip")
+
+'Call UnzipAFile("C:\Print\Clearing\" & Cells(f, 2).Value & ".zip", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\")
+'Call CreateFolder("C:\Print\Clearing\Inward\", Cells(f, 2).Value)
+
+
+'Call ExtractZipFiles("C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\", "C:Print\Clearing\" & Cells(f, 2) & ".rar")
+lblVCode.Caption = Cells(f, 2).Value
+lblViewName.Caption = Cells(f, 3).Value
+DoEvents
+
+Call ZipFiles("C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\" & Cells(f, 2).Value & ".zip", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value & "\")
+
+
+
+'Call Recursive("C:\Print\Clearing\", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value)
+
+' Call UnzipFile("C:\Print\Clearing\" & Cells(f, 2).Value & ".zip", "C:\Print\Clearing\Inward\" & Cells(f, 2).Value)
+ 
+    
+'Call Unzip2
+Next f
+
+ 
+End Sub
+
+Private Sub CommandButton4_Click()
+Call RenameFiles
+
+End Sub
+
+Private Sub CommandButton5_Click()
+Call CreateExcelThreads
+End Sub
+
+Private Sub CommandButton6_Click()
+Dim strFile As String
+Dim strPath As String
+
+    With Application
+        .EnableEvents = False
+        .DisplayAlerts = False
+        .ScreenUpdating = False
+    End With
+'Turn off events, alerts & screen updating
+
+        strPath = "D:\Users\"
+        strFile = Dir(strPath & "*.txt")
+'Change the path as required
+
+  '  Do While strFile <> ""
+    For f = 1 To 10
+    
+        Workbooks.Add filename:=strPath & f, Format:=2
+        strFile = "Name" & f & ".xlsx"
+        ActiveWorkbook.SaveAs filename:=strPath & strFile, FileFormat:=xlOpenXMLWorkbook
+        ActiveWorkbook.Close True
+      '  strFile = Dir
+Next f
+
+'Opens the Workbook, set the file name, save in new format and close workbook
+
+    With Application
+        .EnableEvents = True
+        .DisplayAlerts = True
+        .ScreenUpdating = True
+    End With
+'Turn on events, alerts & screen updating
+
+
+End Sub
+
+Private Sub CommandButton7_Click()
+Dim clsExcel As cExcel
+
+Set clsExcel = New cExcel
+
+Call clsExcel.Examples_CExcel
+
+
+End Sub
+
+Private Sub CommandButton8_Click()
+
+'PURPOSE: Send All Data From Text File To A String Variable
+'SOURCE: www.TheSpreadsheetGuru.com
+
+Dim Delimiter As String
+Dim TextFile As Integer
+Dim FilePath As String
+Dim FileContent As String
+Dim LineArray() As String
+Dim DataArray() As String
+Dim TempArray() As String
+Dim rw As Long, col As Long
+
+'Inputs
+  Delimiter = ";"
+  FilePath = "G:\MyFile.txt"
+  rw = 0
+  
+'Open the text file in a Read State
+  TextFile = FreeFile
+  Open FilePath For Input As TextFile
+  
+'Store file content inside a variable
+  FileContent = Input(LOF(TextFile), TextFile)
+
+'Close Text File
+  Close TextFile
+  
+'Separate Out lines of data
+  LineArray() = Split(FileContent, vbCrLf)
+
+'Read Data into an Array Variable
+  For x = LBound(LineArray) To UBound(LineArray)
+        ListBox1.AddItem (x)
+    'If Len(Trim(LineArray(x))) <> 0 Then
+ 
+
+' MsgBox FileContent
+
+ rw = rw + 1
+
+Next x
+
+
+End Sub
+
+Private Sub CommandButton9_Click()
+'Call ExtractToNewWorkbook
+Call ExtractData
+
+End Sub
+
+Private Sub UserForm_Activate()
+cmbType.AddItem ("Inward")
+cmbType.AddItem ("Inward-Return")
+cmbType.AddItem ("Outward")
+cmbType.AddItem ("Outward-Return")
+Call CreateFolder("C:\Print\", "Clearing")
+Call CreateFolder("C:\Print\Clearing\", "Inward")
+Call CreateFolder("C:\Print\Clearing\", "Inward-Return")
+Call CreateFolder("C:\Print\Clearing\", "Outward")
+Call CreateFolder("C:\Print\Clearing\", "Outward-Return")
+
+
+
+End Sub
+
+Sub unzip4()
+Dim FSO As Object
+    Dim oApp As Object
+    Dim Fname As Variant
+    Dim FileNameFolder As Variant
+    Dim DefPath As String
+    Dim strDate As String
+    Dim i As Long
+    Dim num As Long
+    Const glngcCopyHereDisplayProgressBar = 256
+    
+    
+
+    Fname = Application.GetOpenFilename(filefilter:="Zip Files (*.zip), *.zip", _
+                                        MultiSelect:=True)
+    If IsArray(Fname) = False Then
+        'Do nothing
+    Else
+        'Root folder for the new folder.
+        'You can also use DefPath = "C:\Users\Ron\test\"
+        DefPath = Application.DefaultFilePath
+        If Right(DefPath, 1) <> "\" Then
+            DefPath = DefPath & "\"
+        End If
+
+        'Create the folder name
+        strDate = Format(Now, " dd-mm-yy h-mm-ss")
+        FileNameFolder = DefPath & "MyUnzipFolder " & strDate & "\"
+
+        'Make the normal folder in DefPath
+        MkDir FileNameFolder
+
+        'Extract the files into the newly created folder
+        Set oApp = CreateObject("Shell.Application")
+    
+        
+
+        For i = LBound(Fname) To UBound(Fname)
+            num = oApp.Namespace(FileNameFolder).items.Count
+            For Each fileNameInZip In oApp.Namespace(Fname).items
+            If right(LCase(fileNameInZip),4) = "F.bmp"
+            
+                oApp.Namespace(FileNameFolder).CopyHere _
+                        oApp.Namespace(Fname).items.Item(CStr(fileNameInZip))
+            End If
+            oApp.Namespace(FileNameFolder).CopyHere oApp.Namespace(Fname(i)).items
+
+        Next i
+
+        MsgBox "You find the files here: " & FileNameFolder
+        Name "" As ""
+        
+        On Error Resume Next
+        Set FSO = CreateObject("scripting.filesystemobject")
+        FSO.deletefolder Environ("Temp") & "\Temporary Directory*", True
+    End If
+End Sub
+Sub Unzip2()
+    Dim FSO As Object
+    Dim oApp As Object
+    Dim Fname As Variant
+    Dim FileNameFolder As Variant
+    Dim DefPath As String
+    Dim strDate As String
+    Dim fileNameInZip As Variant
+
+    Fname = Application.GetOpenFilename(filefilter:="Zip Files (*.zip), *.zip", _
+                                        MultiSelect:=True)
+    If Fname = False Then
+
+    Else
+
+        DefPath = Application.DefaultFilePath
+        If Right(DefPath, 1) <> "\" Then
+            DefPath = DefPath & "\"
+        End If
+
+        strDate = Format(Now, " dd-mm-yy h-mm-ss")
+        FileNameFolder = DefPath & "MyUnzipFolder " & strDate & "\"
+
+        MkDir FileNameFolder
+
+        'Extract the files into the newly created folder
+        Set oApp = CreateObject("Shell.Application")
+
+        For Each fileNameInZip In oApp.Namespace(Fname).items
+            'If LCase(fileNameInZip) Like LCase("*.txt") Then
+            If Right(fileNameInZip, 5) = "F.bmp" Then
+                oApp.Namespace(FileNameFolder).CopyHere _
+                        oApp.Namespace(Fname).items.Item(CStr(fileNameInZip))
+            End If
+        Next
+
+        On Error Resume Next
+        Set FSO = CreateObject("scripting.filesystemobject")
+        FSO.deletefolder Environ("Temp") & "\Temporary Directory*", True
+    End If
+End Sub
+Function CreateFolder(FolderPath As String, FolderName As String)
+ Dim FSO As Object
+   ' Dim tdate As Date
+    Dim fldrname As String
+    Dim fldrpath As String
+
+    'tdate = Now()
+    Set FSO = CreateObject("scripting.filesystemobject")
+    fldrname = FolderPath 'Format(tdate, "dd-mm-yyyy")
+    fldrpath = FolderPath & FolderName
+    If Not FSO.FolderExists(fldrpath) Then
+        FSO.CreateFolder (fldrpath)
+    End If
+End Function
+
+
+Sub RenameFiles()
+Const FolderLoc = "C:\Print\Clearing\"
+Dim x As Long
+x = 1
+Dim oldName As String
+Dim newName As String
+oldName = Dir(FolderLoc & "*.rar")
+Do While oldName <> ""
+    If Len(oldName) = 19 Then
+    newName = Mid(oldName, 4, 4)
+   ' Name FolderLoc & s As FolderLoc & x & Right(s, Len(s) - (InStr(s, "_") - 1))
+    Name FolderLoc & oldName As FolderLoc & newName & ".zip"
+    oldName = Dir()
+    x = x + 1
+    Else
+    oldName = Dir()
+    x = x + 1
+    End If
+    
+Loop
+MsgBox "Total Files" & x
+
+
+End Sub
+
+Sub UnzipFile1(ByVal strZipFileName, ByVal strDstDir)
+
+Const CopyDisplayBar = 256
+
+
+
+Dim objShell, objSource, objTarget, intOptions
+Set objSource = Nothing
+Set objTarget = Nothing
+Set obshell = Nothing
+Set objShell = CreateObject("Shell.Application")
+Set objSource = objShell.Namespace(strZipFileName).items
+
+
+Set objTarget = objShell.Namespace(strDstDir)
+intOptions = CopyDisplayBar
+objTarget.CopyHere objSource, intOptions
+
+
+
+
+End Sub
+
+
+Sub Recursive(FolderPath As Variant, destfolder As Variant)
+Dim Value As String, Folders() As String
+Dim folder As Variant, a As Long
+Dim SApp As Object
+
+ReDim Folders(0)
+
+'If Right(FolderPath, 2) = "\\" Then Exit Sub
+Value = Dir(FolderPath, &H1F)
+
+Do Until Value = ""
+    If Value = "." Or Value = ".." Then
+    Else
+        If GetAttr(FolderPath & Value) = 16 Or GetAttr(FolderPath & Value) = 48 Then
+            Folders(UBound(Folders)) = Value
+            ReDim Preserve Folders(UBound(Folders) + 1)
+        Else
+            If Right(Value, 4) = ".zip" Then
+                Set SApp = CreateObject("Shell.Application")
+                SApp.Namespace(destfolder).CopyHere _
+                SApp.Namespace(FolderPath & Value).items
+            End If
+        End If
+    End If
+    Value = Dir
+Loop
+End Sub
+
+Sub UnzipAFile(zippedFileFullName As Variant, unzipToPath As Variant)
+
+Dim ShellApp As Object
+
+'Copy the files & folders from the zip into a folder
+Set ShellApp = CreateObject("Shell.Application")
+ShellApp.Namespace(zippedFileFullName).CopyHere ShellApp.Namespace(unzipToPath).items
+
+End Sub
+
+
+Sub UnZip1(strTargetPath As String, Fname As Variant)
+ 
+    Dim oApp As Object
+ 
+    Dim FileNameFolder As Variant
+ 
+ 
+ 
+    If Right(strTargetPath, 1) <> Application.PathSeparator Then
+ 
+        strTargetPath = strTargetPath & Application.PathSeparator
+ 
+    End If
+ 
+ 
+ 
+    FileNameFolder = strTargetPath
+ 
+ 
+ 
+    Set oApp = CreateObject("Shell.Application")
+ 
+    oApp.Namespace(FileNameFolder).CopyHere oApp.Namespace(Fname).items
+ 
+End Sub
+
+
+Sub Extract(Src As String, Dest As String)
+
+    Dim RarIt As String
+    Dim Source As String
+    Dim Desti As String
+    Dim WinRarPath As String
+
+    WinRarPath = "C:\Program Files (x86)\WinRar\"
+   Source = Src
+   Desti = Dest
+
+    RarIt = Shell(Chr(34) & WinRarPath & "WinRar.exe" & Chr(34) & " e " & Chr(34) & Source & Chr(34) & " " & Chr(34) & Desti & Chr(34), vbNormalFocus)
+
+End Sub
+
+
+Sub ZipAll(Src As String, Dest As String)
+
+    Dim RarIt As String
+    Dim Source As String
+    Dim Desti As String
+    Dim WinRarPath As String
+
+    WinRarPath = "C:\Program Files (x86)\WinRar\"
+   Source = Src
+   Desti = Dest
+
+
+    RarIt = Shell(Chr(34) & WinRarPath & "WinRar.exe" & Chr(34) & " -afzip " & Chr(34) & Chr(34) & Desti & Chr(34) & " " & Chr(34) & Source & Chr(34), vbNormalFocus)
+
+End Sub
+
+Sub makeZipFile(pathToZipFolder As Variant, zippedFileName As Variant)
+
+Dim ShellApp As Object
+
+'First we create an empty zip file
+Open zippedFileName For Output As #1
+Print #1, Chr$(80) & Chr$(75) & Chr$(5) & Chr$(6) & String(18, 0)
+Close #1
+
+'Next we copy the files & folders into the zip file
+Set ShellApp = CreateObject(“Shell.Application”)
+
+ShellApp.Namespace(zippedFileName).CopyHere ShellApp.Namespace(pathToZipFolder).items
+
+On Error Resume Next
+Do Until ShellApp.Namespace(zippedFileName).items.Count = ShellApp.Namespace(pathToZipFolder).items.Count
+'Application.Wait (Now + TimeValue(“0:00:01”))
+Loop
+On Error GoTo 0
+
+End Sub
+
+
+Sub FinalUnzip(FolderName As String, filename As String)
+    Dim FSO As Object
+    Dim oApp As Object
+   ' Dim FName As Variant
+   ' Dim FileNameFolder As Variant
+    Dim DefPath As String
+    Dim strDate As String
+    Dim fileNameInZip As Object
+    
+
+    Fname = filename
+    If Fname = "" Then
+
+    Else
+
+        'Extract the files into the newly created folder
+        Set oApp = CreateObject("Shell.Application")
+
+        For Each fileNameInZip In oApp.Namespace(Fname).items
+            'If LCase(fileNameInZip) Like LCase("*.txt") Then
+            If LCase(Right(fileNameInZip, 5)) = "F.bmp" Then
+                oApp.Namespace(FolderName).CopyHere _
+                        oApp.Namespace(Fname).items.Item(CStr(fileNameInZip))
+            End If
+        Next
+
+        On Error Resume Next
+        Set FSO = CreateObject("scripting.filesystemobject")
+        FSO.deletefolder Environ("Temp") & "\Temporary Directory*", True
+    End If
+End Sub
+
+
+Sub UnZipFiles()
+
+
+
+    Dim File        As Object
+    Dim Files       As Object
+    Dim MainFldr    As Object
+    Dim MainPath    As Variant
+    Dim oShell      As Object
+    Dim ZipFile     As Variant
+    Dim ZipFldr     As Object
+    
+        MainPath = "C:\Print\Clearing"
+        
+        
+        Set oShell = CreateObject("Shell.Application")
+            
+        Set MainFldr = oShell.Namespace(MainPath)
+        
+            Set Files = MainFldr.items
+                Files.Filter 32, "*.zip"
+                
+            For Each File In Files
+                Set ZipFldr = oShell.Namespace(File)
+                For Each ZipFile In ZipFldr.items
+                    MainFldr.CopyHere ZipFile.Path
+                Next ZipFile
+            Next File
+            
+End Sub
+
+Sub UnZip(strTargetPath As String, Fname As Variant)
+Dim oApp As Object, FSOobj As Object
+Dim FileNameFolder As Variant
+
+If Right(strTargetPath, 1) <> Application.PathSeparator Then
+strTargetPath = strTargetPath & Application.PathSeparator
+End If
+
+FileNameFolder = strTargetPath
+
+'create destination folder if it does not exist
+Set FSOobj = CreateObject("Scripting.FilesystemObject")
+If FSOobj.FolderExists(FileNameFolder) = False Then
+FSOobj.CreateFolder FileNameFolder
+End If
+
+Set oApp = CreateObject("Shell.Application")
+oApp.Namespace(FileNameFolder).CopyHere oApp.Namespace(Fname).items
+'oApp.Namespace(CVar(FileNameFolder)).CopyHere oApp.Namespace(CVar(Fname)).items
+
+Set oApp = Nothing
+Set FSOobj = Nothing
+Set FileNameFolder = Nothing
+End Sub
+
+
+Sub Unzip_All_Files()
+    Dim OBJ1 As Object
+    Dim OBJ2 As Object
+    Dim v_variant1 As Variant
+    Dim v_variant2 As Variant
+    Dim path1 As String
+    Dim string1 As String
+    Dim zfile1 As String
+    Dim lr As Long
+    Dim r As Long
+    lr = UnZip.Range("B" & Rows.Count).End(xlUp).Row
+    For r = 5 To lr
+        v_variant1 = UnZip.Range("B" & r).Value
+        If v_variant1 = False Then
+        Else
+            path1 = Application.DefaultFilePath
+            If Right(path1, 1) <> "\" Then
+                path1 = path1 & "\"
+            End If
+            string1 = Format(Now, " dd-mm-yy h-mm-ss")
+            v_variant2 = UnZip.Range("O" & r).Value
+            On Error Resume Next
+            MkDir v_variant2
+            On Error GoTo 0
+            Set OBJ2 = CreateObject("Shell.Application")
+            OBJ2.Namespace(v_variant2).CopyHere OBJ2.Namespace(v_variant1).items
+            On Error Resume Next
+            Set OBJ1 = CreateObject("scripting.filesystemobject")
+            OBJ1.deletefolder Environ("Temp") & "\Temporary Directory*", True
+        End If
+    Next r
+End Sub
+
+'Sub ExtractZipFiles(UnzipPath As String, ZipFile As String)
+Sub Extracted(ZipFile As String, UnzipPath As String)
+Dim RarIt As Variant
+    Dim Source As String
+    Dim Desti As String
+    Dim WinRarPath As String
+    Dim command As String
+    
+
+    WinRarPath = "C:\Program Files (x86)\WinRar\"
+    Source = ZipFile
+    Desti = UnzipPath
+    command = "C:\Program Files (x86)\WinRAR\WinRAR.exe E -ibck" & " " & Source & " " & "*F.BMP" & " " & Desti
+
+ vRar = Shell(command, vbHide)
+
+'RarIt = Shell(WinRarPath & "WinRar.exe" & "a -afzip" & " source " & "Desti", vbNormalFocus)
+
+End Sub
+
+Sub ZipFiles(CreateZipFile As String, PackFiles As String)
+Dim RarIt As Variant
+    Dim Source As String
+    Dim Desti As String
+    Dim WinRarPath As String
+    Dim command As String
+    
+
+    WinRarPath = "C:\Program Files (x86)\WinRar\"
+    Source = CreateZipFile
+    Desti = PackFiles
+    command = "C:\Program Files (x86)\WinRAR\WinRAR.exe a -ep1 -df -ibck" & " " & Source & " " & Desti
+
+ vRar = Shell(command, vbHide)
+
+'RarIt = Shell(WinRarPath & "WinRar.exe" & "a -afzip" & " source " & "Desti", vbNormalFocus)
+
+End Sub
+
+
+'new class inheried
+

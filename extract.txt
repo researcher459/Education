@@ -1,0 +1,65 @@
+Sub ExtractToNewWorkbook()
+
+Dim ws     As Worksheet
+
+Dim wsNew  As Workbook
+
+Dim rData  As Range
+
+Dim rfl    As Range
+
+Dim state  As String
+
+Dim sfilename As String
+
+Set ws = Workbooks.Open("G:\Template.xlsx").Sheets("sheet1")
+'Apply advance filter in your sheet
+
+With ws
+
+Set rData = .Range(.Cells(1, 1), .Cells(.Rows.Count, 11).End(xlUp))
+
+.Columns(.Columns.Count).Clear
+
+.Range(.Cells(1, 1), .Cells(.Rows.Count, 1).End(xlUp)).AdvancedFilter Action:=xlFilterCopy, CopyToRange:=.Cells(1, .Columns.Count), Unique:=True
+
+ 
+For Each rfl In .Range(.Cells(1, .Columns.Count), .Cells(.Rows.Count, .Columns.Count).End(xlUp))
+
+state = rfl.text
+
+ 
+
+Set wsNew = Workbooks.Add
+
+sfilename = state & ".xlsx"
+
+'Set the Location
+
+ActiveWorkbook.SaveAs "G:\Data" & "\" & sfilename
+
+Application.DisplayAlerts = False
+
+ws.Activate
+
+rData.AutoFilter Field:=1, Criteria1:=state
+
+rData.Copy
+
+Windows(state).Activate
+
+ActiveSheet.Paste
+
+ActiveWorkbook.Close SaveChanges:=True
+
+Next rfl
+
+Application.DisplayAlerts = True
+
+End With
+
+ws.Columns(Columns.Count).ClearContents
+
+rData.AutoFilter
+
+End Sub
