@@ -1,0 +1,146 @@
+Private Sub CommandButton8_Click()
+
+'PURPOSE: Send All Data From Text File To A String Variable
+'SOURCE: www.TheSpreadsheetGuru.com
+
+Dim Delimiter As String
+Dim cr As Long
+
+Dim TextFile As Integer
+Dim FilePath As String
+Dim FileContent As String
+Dim LineArray() As String
+Dim DataArray() As String
+Dim TempArray() As String
+Dim rw As Long, col As Long
+Dim Branch As String
+Dim Branches As Range
+Dim Path As String
+Dim Amount As Double
+Dim paisa As Double
+  Dim FileNumber As Integer
+Dim TInstrument As Long
+Dim tpaisa As Double
+Dim FSO As Object
+Dim TxtFile As String
+
+
+
+
+
+Dim k As Long
+Dim Name As Variant
+Set FSO = CreateObject("scripting.filesystemobject")
+
+k = Cells(Rows.Count, "B").End(xlUp).Row
+
+ With Application.FileDialog(msoFileDialogOpen)
+        .InitialFileName = "C:\PRINT\CLEARING\"   'this is the default folder shown
+        .AllowMultiSelect = False
+        .Filters.Add "All Files", "*.txt"        'everything
+        .Show
+        If .SelectedItems.Count > 0 Then
+            FilePath = .SelectedItems(1)
+        Else
+        MsgBox "No File Selected"
+            Exit Sub
+        End If
+    End With
+
+'Inputs
+  Delimiter = ";"
+  'FilePath = TxtFile
+   TxtFile = Mid(FSO.GetFileName(FilePath), 4, 8)
+   
+If Not TxtFile = Format(Now(), "YYYYMMDD") Then
+ Exit Sub
+ End If
+ 
+ 
+  rw = 0
+  
+'Open the text file in a Read State
+  TextFile = FreeFile
+  Open FilePath For Input As TextFile
+  
+'Store file content inside a variable
+  FileContent = Input(LOF(TextFile), TextFile)
+
+'Close Text File
+  Close TextFile
+  
+'Separate Out lines of data
+  LineArray() = Split(FileContent, vbCrLf)
+  
+
+
+For f = 2 To k
+'Set Branches = Workbooks.Open("G:\Template5.xlsx").Sheets("Sheet1").Range("B3")
+'Amount = "3333.88"
+If Not FSO.FolderExists("C:\PRINT\CLEARING\INWARD\" & Cells(f, 2).Value & "\") Then
+On Error Resume Next
+
+Else
+
+
+TInstrument = 0
+'LineArray() = Cells(f, 2).Value
+
+
+  Path = "C:\PRINT\CLEARING\INWARD\" & Cells(f, 2).Value & "\" & Cells(f, 2).Value & ".txt"
+     'Change the path as per your requirement
+
+          FileNumber = FreeFile
+  
+
+
+Open Path For Output As #FileNumber
+Print #FileNumber, vbTab; vbTab; vbTab; vbTab; vbTab; "Inward Clearing Summary"
+Print #FileNumber, vbTab; vbTab; vbTab; vbTab; "Clearing Date:" & " " & Now
+Print #FileNumber, vbNewLine
+Print #FileNumber, "ID" & vbTab & "AMOUNT"
+
+'Read Data into an Array Variable
+  For x = LBound(LineArray) To UBound(LineArray)
+'Open Path For Append As #Cells(2, f).Value
+
+       ' ListBox1.AddItem (Mid(LineArray(x), 4, 4))
+        Branch = Mid(LineArray(x), 4, 4)
+        
+        If Branch = Cells(f, 2).Value Then
+        Amount = Mid(LineArray(x), 23, 8)
+        paisa = Mid(LineArray(x), 32, 2)
+        tpaisa = CDbl(Amount & "." & paisa)
+        
+         Total = Total + tpaisa
+        TInstrument = TInstrument + 1
+        Print #FileNumber, Branch & "|"; Format(Amount & "." & paisa, "Standard")
+        
+        
+        End If
+       
+     
+    'If Len(Trim(LineArray(x))) <> 0 Then
+ 
+
+' MsgBox FileContent
+
+ rw = rw + 1
+
+Next x
+ Print #FileNumber, " "
+ Print #FileNumber, "Total Instrument is", TInstrument
+ Print #FileNumber, "Total Amount       ", Format(Round(Total, 2), "Standard")
+         
+        
+ 
+        
+Total = 0
+End If
+Close #FileNumber
+
+
+Next f
+
+
+End Sub
