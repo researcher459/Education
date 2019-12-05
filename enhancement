@@ -1,0 +1,33 @@
+ paisa = Mid(LineArray(x), 32, 2)
+        tpaisa = Amount & "." & paisa
+   
+        
+         Total = Total + tpaisa
+        TInstrument = TInstrument + 1
+        Print #FileNumber, Branch & "|"; Format(Amount & "." & paisa, "Standard")
+        
+        
+        End If
+       
+     With ThisWorkbook.AcceptAllChanges
+    'If Len(Trim(LineArray(x))) <> 0 Then
+ 
+
+' MsgBox FileContent
+
+ rw = rw + 1
+
+Next x
+ Print #FileNumber, " "
+ Print #FileNumber, "Total Instrument is", TInstrument
+ Print #FileNumber, "Total Amount       ", Format(Round(Total, 2), "Standard")
+ 
+        
+ 
+        
+Total = 0
+End If
+Close #FileNumber
+
+
+Next f
